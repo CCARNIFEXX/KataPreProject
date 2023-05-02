@@ -5,7 +5,7 @@ import jm.task.core.jdbc.model.User;
 import java.util.List;
 
 public interface UserDao {
-    void createUsersTable();
+    void createUsersTable() ;
 
     void dropUsersTable();
 
@@ -13,7 +13,7 @@ public interface UserDao {
 
     void removeUserById(long id);
 
-    List<User> getAllUsers();
+    List<User> getAllUsers() ;
 
     void cleanUsersTable();
 }
