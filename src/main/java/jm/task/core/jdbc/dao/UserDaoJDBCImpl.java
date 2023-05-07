@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoJDBCImpl implements UserDao {
+    UserDaoJDBCImpl() {
+
+    }
 
     private void execUp(String sql) {
         try (Connection connection = Util.getMySQLConnection()) {
