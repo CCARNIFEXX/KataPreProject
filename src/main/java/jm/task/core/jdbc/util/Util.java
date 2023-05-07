@@ -6,6 +6,8 @@ import java.sql.SQLException;
 
 public class Util {
 
+    //jdbc:mysql://localhost:3306/test
+
     public static Connection getMySQLConnection() throws SQLException,
             ClassNotFoundException {
         String hostName = "localhost";
@@ -13,13 +15,6 @@ public class Util {
         String dbName = "test";
         String userName = "test";
         String password = "test";
-
-        return getMySQLConnection(hostName, dbName, userName, password);
-    } //jdbc:mysql://localhost:3306/test
-
-    public static Connection getMySQLConnection(String hostName, String dbName,
-                                                String userName, String password) throws SQLException,
-            ClassNotFoundException {
 
        Class.forName("com.mysql.jdbc.Driver");
 

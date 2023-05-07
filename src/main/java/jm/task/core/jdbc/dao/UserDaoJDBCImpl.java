@@ -4,37 +4,18 @@ import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoJDBCImpl implements UserDao {
-    private final Connection connection;
 
-    public UserDaoJDBCImpl() {
-        try {
-            this.connection = Util.getMySQLConnection();
+    private void execUp(String sql) {
+        try (Connection connection = Util.getMySQLConnection()) {
+            connection.prepareStatement(sql).execute();
         } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private ResultSet execQuery(String sql) {
-        try {
-            Statement statement = connection.createStatement();
-            return statement.executeQuery(sql);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private int execUp(String sql) {
-        try {
-            Statement statement = connection.createStatement();
-            return statement.executeUpdate(sql);
-        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -54,31 +35,47 @@ public class UserDaoJDBCImpl implements UserDao {
                 """);
     }
 
+
     public void dropUsersTable() {
         execUp("drop table if exists user;");
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        execUp("""
+        try (Connection connection = Util.getMySQLConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement("""
                 insert into test.user (name, lastName, age)
-                values ('%s','%s',%s);"""
-                .formatted(name, lastName, age));
+                values (?,?,?);""");
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, lastName);
+            preparedStatement.setByte(3, age);
+            preparedStatement.execute();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void removeUserById(long id) {
-        execUp("""
-                delete
-                from test.user
-                where id = %s;
-                """.formatted(id));
+        try (Connection connection = Util.getMySQLConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement("""
+                    delete
+                    from test.user
+                    where id = ?;
+                                        
+                    """);
+            preparedStatement.setLong(1, id);
+            preparedStatement.execute();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public List<User> getAllUsers() {
-        try (ResultSet rs = execQuery("""
-                select *
-                from test.user;
-                """
-        )) {
+        try (Connection connection = Util.getMySQLConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(""" 
+                            select *
+                            from test.user;
+                    """);
+            ResultSet rs = preparedStatement.executeQuery();
             List<User> result = new ArrayList<>();
 
             while (rs.next()) {
@@ -90,16 +87,14 @@ public class UserDaoJDBCImpl implements UserDao {
                 result.add(user);
             }
             return result;
-        } catch (SQLException se) {
-            throw new RuntimeException(se);
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
     public void cleanUsersTable() {
         execUp("""
-                delete
-                from test.user
-                where true;
+                    truncate table user;
                 """);
     }
 }
