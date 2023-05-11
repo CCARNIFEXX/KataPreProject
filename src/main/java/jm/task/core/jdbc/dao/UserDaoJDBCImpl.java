@@ -11,14 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoJDBCImpl implements UserDao {
-    UserDaoJDBCImpl() {
 
+    private final Connection connection;
+
+    public UserDaoJDBCImpl() throws SQLException, ClassNotFoundException {
+        this.connection = Util.getMySQLConnection();
     }
 
     private void execUp(String sql) {
-        try (Connection connection = Util.getMySQLConnection()) {
-            connection.prepareStatement(sql).execute();
-        } catch (SQLException | ClassNotFoundException e) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.execute();
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -44,40 +47,39 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        try (Connection connection = Util.getMySQLConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("""
+        try (PreparedStatement preparedStatement = connection.prepareStatement("""
                 insert into test.user (name, lastName, age)
-                values (?,?,?);""");
+                values (?,?,?);""")) {
+
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, lastName);
             preparedStatement.setByte(3, age);
             preparedStatement.execute();
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void removeUserById(long id) {
-        try (Connection connection = Util.getMySQLConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("""
-                    delete
-                    from test.user
-                    where id = ?;
-                                        
-                    """);
+        try (PreparedStatement preparedStatement = connection.prepareStatement("""
+                delete
+                from test.user
+                where id = ?;
+                """)
+        ) {
             preparedStatement.setLong(1, id);
             preparedStatement.execute();
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public List<User> getAllUsers() {
-        try (Connection connection = Util.getMySQLConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(""" 
-                            select *
-                            from test.user;
-                    """);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(""" 
+                        select *
+                        from test.user;
+                """)
+        ) {
             ResultSet rs = preparedStatement.executeQuery();
             List<User> result = new ArrayList<>();
 
@@ -90,7 +92,7 @@ public class UserDaoJDBCImpl implements UserDao {
                 result.add(user);
             }
             return result;
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }

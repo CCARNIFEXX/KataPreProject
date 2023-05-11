@@ -4,13 +4,14 @@ import jm.task.core.jdbc.dao.UserDao;
 import jm.task.core.jdbc.dao.UserDaoJDBCImpl;
 import jm.task.core.jdbc.model.User;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
 
-    public UserServiceImpl() {
+    public UserServiceImpl() throws SQLException, ClassNotFoundException {
         userDao = new UserDaoJDBCImpl();
     }
 

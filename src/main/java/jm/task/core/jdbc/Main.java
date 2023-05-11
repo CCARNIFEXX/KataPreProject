@@ -4,9 +4,16 @@ package jm.task.core.jdbc;
 import jm.task.core.jdbc.service.UserService;
 import jm.task.core.jdbc.service.UserServiceImpl;
 
+import java.sql.SQLException;
+
 public class Main {
     public static void main(String[] args) {
-        UserService userService = new UserServiceImpl();
+        UserService userService;
+        try {
+            userService = new UserServiceImpl();
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
 
         // Создание таблицы User(ов)
         userService.createUsersTable();
