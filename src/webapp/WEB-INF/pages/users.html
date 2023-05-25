@@ -12,10 +12,10 @@
 <body>
 <div>
     <table>
-        <tr th:each="car : ${cars}">
-            <td th:text="${car.getModel()}"></td>
-            <td th:text="${car.getVin()}"></td>
-            <td th:text="${car.getYear()}"></td>
+        <tr th:each="users : ${users}">
+            <td th:text="${users.getModel()}"></td>
+            <td th:text="${users.getVin()}"></td>
+            <td th:text="${users.getYear()}"></td>
         </tr>
     </table>
 </div>
