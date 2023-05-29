@@ -5,8 +5,8 @@ import kata8.dao.UserDao;
 import kata8.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -20,6 +20,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly=true)
     public List<User> getAllUsers() throws DaoException {
         return userDao.getAllUsers();
     }
@@ -43,6 +44,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User getUserById(long id) throws DaoException {
         return userDao.getUserById(id);
     }

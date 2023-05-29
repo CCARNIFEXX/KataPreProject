@@ -1,8 +1,11 @@
 package kata8.entity;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "users")
@@ -12,10 +15,15 @@ public class User {
     @GenericGenerator(name = "increment", strategy = "increment")
     private long id;
     @Column(name = "name", nullable = false, length = 500)
+    @Length(min = 1,max = 500)
     private String name;
+
     @Column(name = "email", nullable = false, length = 500)
+    @Pattern(regexp = "[^@]+@[^@]+\\.[^@]+")
     private String email;
+
     @Column(name = "age", nullable = false, length = 200)
+    @Range(min = 0,max = 200)
     private int age;
 
     public User() {

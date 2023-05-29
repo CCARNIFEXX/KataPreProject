@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Controller
 public class UsersController {
     private final UserService service;
@@ -31,7 +33,8 @@ public class UsersController {
     }
 
     @PostMapping(value = "/users/save")
-    public String addUser(@ModelAttribute("user") User user) throws DaoException {
+
+    public String addUser(@ModelAttribute("user") @Valid User user ) throws DaoException {
         service.saveUser(user);
         return "redirect:/users";
     }
@@ -43,7 +46,7 @@ public class UsersController {
     }
 
     @PatchMapping(value = "users/change")
-    public String edit(@ModelAttribute("user") User user) throws DaoException {
+    public String edit(@ModelAttribute("user") @Valid User user) throws DaoException {
         service.changeUser(user);
         return "redirect:/users";
     }

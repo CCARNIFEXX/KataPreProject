@@ -15,8 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.List;
 import java.util.Properties;
 
 @Configuration
@@ -41,19 +40,19 @@ public class DataBaseConfig {
 
     @Bean
     public DataSource dataSource() {
-        BasicDataSource ds = new BasicDataSource();
-        ds.setUrl((env.getRequiredProperty("db.url")));
-        ds.setDriverClassName(env.getRequiredProperty("db.driver"));
-        ds.setUsername(env.getRequiredProperty("db.username"));
-        ds.setPassword(env.getRequiredProperty("db.password"));
-        ds.setInitialSize(Integer.parseInt(env.getRequiredProperty("db.initialSize")));
-        ds.setMinIdle(Integer.parseInt(env.getRequiredProperty("db.minIdle")));
-        ds.setMaxIdle(Integer.parseInt(env.getRequiredProperty("db.maxIdle")));
-        ds.setTimeBetweenEvictionRunsMillis(Long.parseLong(env.getRequiredProperty("db.timeBetweenEvictionRunsMillis")));
-        ds.setMinEvictableIdleTimeMillis(Long.parseLong(env.getRequiredProperty("db.minEvictableIdleTimeMillis")));
-        ds.setTestOnBorrow(Boolean.parseBoolean(env.getRequiredProperty("db.testOnBorrow")));
-        ds.setValidationQuery(env.getRequiredProperty("db.validationQuery"));
-        return ds;
+        BasicDataSource dataSource = new BasicDataSource();
+        dataSource.setUrl((env.getRequiredProperty("db.url")));
+        dataSource.setDriverClassName(env.getRequiredProperty("db.driver"));
+        dataSource.setUsername(env.getRequiredProperty("db.username"));
+        dataSource.setPassword(env.getRequiredProperty("db.password"));
+        dataSource.setInitialSize(Integer.parseInt(env.getRequiredProperty("db.initialSize")));
+        dataSource.setMinIdle(Integer.parseInt(env.getRequiredProperty("db.minIdle")));
+        dataSource.setMaxIdle(Integer.parseInt(env.getRequiredProperty("db.maxIdle")));
+        dataSource.setTimeBetweenEvictionRunsMillis(Long.parseLong(env.getRequiredProperty("db.timeBetweenEvictionRunsMillis")));
+        dataSource.setMinEvictableIdleTimeMillis(Long.parseLong(env.getRequiredProperty("db.minEvictableIdleTimeMillis")));
+        dataSource.setTestOnBorrow(Boolean.parseBoolean(env.getRequiredProperty("db.testOnBorrow")));
+        dataSource.setValidationQuery(env.getRequiredProperty("db.validationQuery"));
+        return dataSource;
     }
 
     @Bean
@@ -64,14 +63,13 @@ public class DataBaseConfig {
     }
 
     private Properties getHibernateProperties() {
-        try {
-            Properties properties = new Properties();
-            InputStream is = getClass().getClassLoader().getResourceAsStream("hibernate.properties");
-            properties.load(is);
-            return properties;
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Can't find \"hibernate.properties\" in classpath", e);
-        }
+        Properties properties = new Properties();
+        List.of("hibernate.dialect",
+                "hibernate.show_sql",
+                "hibernate.hbm2ddl.auto").forEach(propertyKey -> properties.setProperty(propertyKey, env.getProperty(propertyKey)));
+        return properties;
+
+
     }
 
 }
