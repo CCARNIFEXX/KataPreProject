@@ -1,10 +1,10 @@
-package kata8.entity;
+package kata9.entity;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
-import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 
 @Entity
