@@ -1,6 +1,5 @@
 package kata8.service;
 
-import kata8.dao.DaoException;
 import kata8.dao.UserDao;
 import kata8.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,32 +19,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(readOnly=true)
-    public List<User> getAllUsers() throws DaoException {
+    @Transactional(readOnly = true)
+    public List<User> getAllUsers() {
         return userDao.getAllUsers();
     }
 
     @Override
     @Transactional
-    public void saveUser(User user) throws DaoException {
+    public void saveUser(User user) {
         userDao.saveUser(user);
     }
 
     @Override
     @Transactional
-    public void removeUserById(long id) throws DaoException {
+    public void removeUserById(long id) {
         userDao.removeUserById(id);
     }
 
     @Override
     @Transactional
-    public void changeUser(User user) throws DaoException {
+    public void changeUser(User user) {
         userDao.changeUser(user);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public User getUserById(long id) throws DaoException {
+    public User getUserById(long id) {
         return userDao.getUserById(id);
     }
 }

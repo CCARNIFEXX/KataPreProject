@@ -5,13 +5,13 @@ import kata8.entity.User;
 import java.util.List;
 
 public interface UserDao {
-    List<User> getAllUsers() throws DaoException;
+    List<User> getAllUsers();
 
-    void saveUser(User user) throws DaoException;
+    void saveUser(User user);
 
-    void removeUserById(long id) throws DaoException;
+    void removeUserById(long id);
 
-    void changeUser(User user) throws DaoException;
+    void changeUser(User user);
 
-    User getUserById(long id) throws DaoException;
+    User getUserById(long id);
 }

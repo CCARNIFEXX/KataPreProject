@@ -13,7 +13,6 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Properties;
@@ -24,14 +23,17 @@ import java.util.Properties;
 @PropertySource("classpath:db.properties")
 @ComponentScan("kata8")
 public class DataBaseConfig {
-    @Resource
-    private Environment env;
+    public DataBaseConfig(Environment environment) {
+        this.environment = environment;
+    }
+
+    private final Environment environment;
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
-        em.setPackagesToScan(env.getRequiredProperty("db.entity.package"));
+        em.setPackagesToScan(environment.getRequiredProperty("db.entity.package"));
         em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         em.setJpaProperties(getHibernateProperties());
         return em;
@@ -41,17 +43,17 @@ public class DataBaseConfig {
     @Bean
     public DataSource dataSource() {
         BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setUrl((env.getRequiredProperty("db.url")));
-        dataSource.setDriverClassName(env.getRequiredProperty("db.driver"));
-        dataSource.setUsername(env.getRequiredProperty("db.username"));
-        dataSource.setPassword(env.getRequiredProperty("db.password"));
-        dataSource.setInitialSize(Integer.parseInt(env.getRequiredProperty("db.initialSize")));
-        dataSource.setMinIdle(Integer.parseInt(env.getRequiredProperty("db.minIdle")));
-        dataSource.setMaxIdle(Integer.parseInt(env.getRequiredProperty("db.maxIdle")));
-        dataSource.setTimeBetweenEvictionRunsMillis(Long.parseLong(env.getRequiredProperty("db.timeBetweenEvictionRunsMillis")));
-        dataSource.setMinEvictableIdleTimeMillis(Long.parseLong(env.getRequiredProperty("db.minEvictableIdleTimeMillis")));
-        dataSource.setTestOnBorrow(Boolean.parseBoolean(env.getRequiredProperty("db.testOnBorrow")));
-        dataSource.setValidationQuery(env.getRequiredProperty("db.validationQuery"));
+        dataSource.setUrl((environment.getRequiredProperty("db.url")));
+        dataSource.setDriverClassName(environment.getRequiredProperty("db.driver"));
+        dataSource.setUsername(environment.getRequiredProperty("db.username"));
+        dataSource.setPassword(environment.getRequiredProperty("db.password"));
+        dataSource.setInitialSize(Integer.parseInt(environment.getRequiredProperty("db.initialSize")));
+        dataSource.setMinIdle(Integer.parseInt(environment.getRequiredProperty("db.minIdle")));
+        dataSource.setMaxIdle(Integer.parseInt(environment.getRequiredProperty("db.maxIdle")));
+        dataSource.setTimeBetweenEvictionRunsMillis(Long.parseLong(environment.getRequiredProperty("db.timeBetweenEvictionRunsMillis")));
+        dataSource.setMinEvictableIdleTimeMillis(Long.parseLong(environment.getRequiredProperty("db.minEvictableIdleTimeMillis")));
+        dataSource.setTestOnBorrow(Boolean.parseBoolean(environment.getRequiredProperty("db.testOnBorrow")));
+        dataSource.setValidationQuery(environment.getRequiredProperty("db.validationQuery"));
         return dataSource;
     }
 
@@ -66,7 +68,7 @@ public class DataBaseConfig {
         Properties properties = new Properties();
         List.of("hibernate.dialect",
                 "hibernate.show_sql",
-                "hibernate.hbm2ddl.auto").forEach(propertyKey -> properties.setProperty(propertyKey, env.getProperty(propertyKey)));
+                "hibernate.hbm2ddl.auto").forEach(propertyKey -> properties.setProperty(propertyKey, environment.getProperty(propertyKey)));
         return properties;
 
 
