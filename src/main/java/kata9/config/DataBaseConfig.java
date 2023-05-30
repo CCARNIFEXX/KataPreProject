@@ -1,18 +1,18 @@
 package kata9.config;
 
-import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "kata9")
+@EnableAutoConfiguration
+@EnableTransactionManagement
 @PropertySource("classpath:application.properties")
 public class DataBaseConfig {
 
@@ -25,8 +25,8 @@ public class DataBaseConfig {
     @Value("${spring.datasource.username}")
     private String username;
 
-    @Resource
-    private Environment environment;
+    /*@Resource
+    private Environment environment;*/
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -36,29 +36,4 @@ public class DataBaseConfig {
         dataSource.setUrl(connectionUrl);
         return dataSource;
     }
-    /*@Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-        em.setDataSource(dataSource());
-        em.setPackagesToScan("kata9.entity");
-        em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        em.setJpaProperties(getHibernateProperties());
-        return em;
-    }*/
-
-    /*@Bean
-    public PlatformTransactionManager platformTransactionManager() {
-        JpaTransactionManager manager = new JpaTransactionManager();
-        manager.setEntityManagerFactory(entityManagerFactory().getObject());
-        return manager;
-    }*/
-
-    /*private Properties getHibernateProperties() {
-        Properties properties = new Properties();
-        List.of("hibernate.dialect",
-                "hibernate.show_sql",
-                "hibernate.hbm2ddl.auto").forEach(propertyKey -> properties.setProperty(propertyKey, environment.getProperty(propertyKey)));
-        return properties;*/
-
-
 }
