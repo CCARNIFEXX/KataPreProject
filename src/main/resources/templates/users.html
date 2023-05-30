@@ -35,7 +35,7 @@
                     <button type="submit" title="Редактировать">✎</button>
                 </form>
                 &nbsp;
-                <form th:method="DELETE" th:action="@{/users/{id}(id=${user.id})}" th:object="${user}">
+                <form method="delete" th:action="@{/users/{id}(id=${user.id})}" th:object="${user}">
                     <button type="submit" title="Удалить">❌</button>
                 </form>
 

@@ -2,6 +2,7 @@ package kata9.entity;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.id.IncrementGenerator;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
@@ -12,7 +13,7 @@ import javax.validation.constraints.Pattern;
 public class User {
     @Id
     @GeneratedValue(generator = "increment")
-    @GenericGenerator(name = "increment", strategy = "increment")
+    @GenericGenerator(name = "increment",type = IncrementGenerator.class)
     private long id;
     @Column(name = "name", nullable = false, length = 500)
     @Length(min = 1,max = 500)
@@ -26,8 +27,7 @@ public class User {
     @Range(min = 0,max = 200)
     private int age;
 
-    public User() {
-    }
+    public User() {}
 
     public User(String name, String email, int age) {
         this.name = name;
