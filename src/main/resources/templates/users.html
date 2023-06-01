@@ -1,15 +1,24 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Все пользователи</title>
     <style>
-        form, button{display: contents;}
+        form, button {
+            display: contents;
+        }
 
-        th,td,table {border-collapse: collapse;border: 1px solid black}
-        th,td {padding: 5px; width: 30%}
+        th, td, table {
+            border-collapse: collapse;
+            border: 1px solid black
+        }
+
+        th, td {
+            padding: 5px;
+            width: 30%
+        }
     </style>
+
 </head>
 <body>
 <div class="container">
@@ -35,7 +44,7 @@
                     <button type="submit" title="Редактировать">✎</button>
                 </form>
                 &nbsp;
-                <form method="delete" th:action="@{/users/{id}(id=${user.id})}" th:object="${user}">
+                <form th:method="DELETE" th:action="@{/users/{id}(id=${user.id})}" th:object="${user}">
                     <button type="submit" title="Удалить">❌</button>
                 </form>
 

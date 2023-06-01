@@ -32,7 +32,6 @@ public class UsersController {
     }
 
     @PostMapping(value = "/users/save")
-
     public String addUser(@ModelAttribute("user") @Valid User user) {
         service.saveUser(user);
         return "redirect:/users";
