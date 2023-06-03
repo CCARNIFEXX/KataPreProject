@@ -1,3 +1,4 @@
+/*
 package kata9.controller;
 
 import kata9.entity.User;
@@ -55,3 +56,4 @@ public class UsersController {
         return "redirect:/users";
     }
 }
+*/
