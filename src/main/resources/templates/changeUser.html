@@ -9,13 +9,13 @@
 <body>
 <h2>Изменение данных пользователя</h2>
 <div>
-    <form th:method="PATCH" th:action="@{/users/change}" th:object="${user}">
+    <form th:method="PATCH" th:action="@{/api/users/change}" th:object="${user}">
         <input type="hidden" name="id" th:value="${user.getId()}">
         <fieldset>
             <legend>Данные пользователя</legend>
             <p>
-                <label th:for="name">Имя</label>
-                <input type="text" name="name" th:id="name" th:value="${user.getName()}" pattern="[A-zА-я -]{1,500}">
+                <label th:for="username">Имя</label>
+                <input type="text" name="username" th:id="username" th:value="${user.getUsername()}" pattern="[A-zА-я -]{1,500}">
 
             </p>
             <p>
@@ -32,7 +32,7 @@
         <button type="submit" class="btn btn-outline-danger">Сохранить изменения</button>
     </form>
     <br/>
-    <form th:action="@{/users}">
+    <form th:action="@{/admin}">
         <button type="submit">Назад</button>
     </form>
 </div>
