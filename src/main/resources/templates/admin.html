@@ -21,7 +21,7 @@
 
 </head>
 <body>
-<header th:replace="block/header.html :: header"></header>
+<header th:replace="~{block/header.html  :: header}"></header>
 <div class="container">
 
     <table class="table">
@@ -45,7 +45,7 @@
                     <button type="submit" title="Редактировать">✎</button>
                 </form>
                 &nbsp;
-                <form th:method="DELETE" th:action="@{/api/users/{id}(id=${user.id})}" th:object="${user}">
+                <form th:method="DELETE" th:action="@{/admin/users/{id}(id=${user.id})}" th:object="${user}">
                     <button type="submit" title="Удалить">❌</button>
                 </form>
 

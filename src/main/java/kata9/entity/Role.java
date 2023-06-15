@@ -1,9 +1,7 @@
 package kata9.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 
 
@@ -20,18 +18,24 @@ public class Role implements GrantedAuthority {
         this.name = name;
     }
 
-    public void setAuthorities(String authorities) {
-        this.authorities = authorities;
+
+    @Column
+    private String name;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Id
-    private String name;
-
-    @Column
-    private String authorities;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GenericGenerator(name = "increment", strategy = "increment")
+    private Long id;
     @Override
     public String getAuthority() {
-        return authorities;
+        return name;
     }
 }

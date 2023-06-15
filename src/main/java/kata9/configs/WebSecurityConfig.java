@@ -1,7 +1,11 @@
 package kata9.configs;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -16,7 +20,21 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
+    @Bean
+    public DaoAuthenticationProvider authProvider(@Qualifier("userServiceImpl") UserDetailsService service, PasswordEncoder encoder) {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(encoder);
+        provider.setUserDetailsService(service);
+        return provider;
+    }
 
+    @Bean
+    public AuthenticationManager authManager(HttpSecurity http, DaoAuthenticationProvider authProvider) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.authenticationProvider(authProvider);
+        return authenticationManagerBuilder.build();
+    }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity, SuccessUserHandler successUserHandler) throws Exception {
         return httpSecurity
@@ -27,9 +45,8 @@ public class WebSecurityConfig {
                                 "/admin",
                                 "/admin/users/change/{id}",
                                 "/admin/users/save",
-                                "/api/users/change",
-                                "/api/users/save",
-                                "/api/users/{id}").hasRole("ADMIN")
+                                "/admin/users/change",
+                                "/admin/users/{id}").hasRole("ADMIN")
                         .anyRequest().permitAll())
                 .formLogin(loginConfigurer -> loginConfigurer
                         .successHandler(successUserHandler))
@@ -47,7 +64,7 @@ public class WebSecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService(DataSource dataSource) {
-        return new JdbcUserDetailsManager(dataSource);/**/
+        return new JdbcUserDetailsManager(dataSource);
     }
 
 

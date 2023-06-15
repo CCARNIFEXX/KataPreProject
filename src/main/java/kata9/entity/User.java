@@ -6,7 +6,6 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.util.DigestUtils;
 
 import javax.validation.constraints.Pattern;
 import java.util.Collection;
@@ -17,9 +16,9 @@ import java.util.Set;
 
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(generator = "increment")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @GenericGenerator(name = "increment", strategy = "increment")
-    private long id;
+    private Long id;
     @Column(nullable = false, length = 500)
     @Length(min = 1, max = 500)
     private String username;
@@ -36,30 +35,19 @@ public class User implements UserDetails {
     private String password;
 
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id")
     private Set<Role> roles;
-
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public Set<Role> getRoles() {
         return roles;
     }
-
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
-
     public void setPassword(String password) {
-        this.password = DigestUtils.md5DigestAsHex(password.getBytes());
+        this.password = password;
     }
-
-    public boolean checkPassword(String password) {
-        return this.password.equals(DigestUtils.md5DigestAsHex(password.getBytes()));
-    }
-
     public User() {
     }
 
@@ -131,21 +119,21 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

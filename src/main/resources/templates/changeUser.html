@@ -9,7 +9,7 @@
 <body>
 <h2>Изменение данных пользователя</h2>
 <div>
-    <form th:method="PATCH" th:action="@{/api/users/change}" th:object="${user}">
+    <form th:method="PATCH" th:action="@{/admin/users/change}" th:object="${user}">
         <input type="hidden" name="id" th:value="${user.getId()}">
         <fieldset>
             <legend>Данные пользователя</legend>
@@ -27,7 +27,10 @@
                 <label th:for="age">Возраст</label>
                 <input type="number" min="0" max="200" name="age" th:id="age" th:value="${user.getAge()}"><br/>
             </p>
-
+            <p>
+                <label th:for="password">Пароль</label>
+                <input type="password"  name="password" th:id="password"  th:value="${user.getPassword()}"><br/>
+            </p>
         </fieldset>
         <button type="submit" class="btn btn-outline-danger">Сохранить изменения</button>
     </form>
