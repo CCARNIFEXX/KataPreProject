@@ -1,25 +1,24 @@
 package kata9.service;
 
+import kata9.controller.ChangeUserDTO;
+import kata9.controller.CreateUserDTO;
 import kata9.entity.User;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Set;
 
 public interface UserService {
     List<User> getAllUsers() ;
 
-    void saveUser(User user) ;
+    void saveUser(@Valid CreateUserDTO user) ;
 
     void removeUserById(Long id) ;
 
-    void changeUser(User user) ;
+    void changeUser(ChangeUserDTO userDTO) ;
 
 
     User getUserById(Long id);
 
     User getUserByName(String name);
-
-    @Transactional(readOnly = true)
-    Set<String> getRolesByName(String name);
+    List<String> getAllRoleNames();
 }

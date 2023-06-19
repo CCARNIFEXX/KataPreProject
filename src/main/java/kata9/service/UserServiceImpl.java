@@ -1,7 +1,10 @@
 package kata9.service;
 
+import kata9.controller.ChangeUserDTO;
+import kata9.controller.CreateUserDTO;
 import kata9.dao.RoleRepository;
 import kata9.dao.UserRepository;
+import kata9.entity.Role;
 import kata9.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -39,9 +43,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional
-    public void saveUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        roleRepository.getByName("ROLE_USER").ifPresent(role -> user.setRoles(Set.of(role)));
+    public void saveUser(@Valid CreateUserDTO userDTO) {
+        User user = new User();
+        user.setUsername(userDTO.getUsername());
+        user.setAge(userDTO.getAge());
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        Set<Role> roles = roleRepository.getByNameIn(userDTO.getRoles());
+        user.setRoles(roles);
         userRepository.save(user);
     }
 
@@ -53,7 +62,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional
-    public void changeUser(User newField) {
+    public void changeUser(ChangeUserDTO newField) {
         userRepository.findById(newField.getId()).ifPresent(userFromDB -> {
             userFromDB.setUsername(newField.getUsername());
             userFromDB.setAge(newField.getAge());
@@ -61,9 +70,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             if (!userFromDB.getPassword().equals(newField.getPassword())) {
                 userFromDB.setPassword(passwordEncoder.encode(newField.getPassword()));
             }
+            Set<Role> roles = roleRepository.getByNameIn(newField.getRoles());
+            userFromDB.setRoles(roles);
             userRepository.save(userFromDB);
         });
-
     }
 
     @Override
@@ -79,10 +89,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Set<String> getRolesByName(String name) {
-        Set<String> roles = userRepository.getRolesByUsername(name);
-        return roles;
+    public List<String> getAllRoleNames() {
+        return roleRepository.getAllNames();
     }
 
     @Override
