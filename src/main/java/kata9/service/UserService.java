@@ -2,6 +2,7 @@ package kata9.service;
 
 import kata9.controller.ChangeUserDTO;
 import kata9.controller.CreateUserDTO;
+import kata9.entity.Role;
 import kata9.entity.User;
 
 import javax.validation.Valid;
@@ -21,4 +22,5 @@ public interface UserService {
 
     User getUserByName(String name);
     List<String> getAllRoleNames();
+    List<Role> getAllRoles();
 }

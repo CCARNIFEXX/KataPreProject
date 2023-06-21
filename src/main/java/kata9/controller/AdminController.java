@@ -30,16 +30,18 @@ public class AdminController {
 
     @GetMapping
     public String getAdminPage(ModelMap model, Authentication authentication) {
-        model.addAttribute("users", service.getAllUsers());
+        model.addAttribute("allUsers", service.getAllUsers());
+        model.addAttribute("allRoles", service.getAllRoles());
         model.addAttribute("currentUser", HeaderUtils.getUserName(authentication));
         model.addAttribute("currentRoles",HeaderUtils.getRoles(authentication));
         return "admin";
     }
 
+
     @GetMapping(value = "/users/save")
     public String addUserPage(Model model,Authentication authentication) {
         model.addAttribute("user", new User());
-        model.addAttribute("roles", service.getAllRoleNames());
+        model.addAttribute("allRoles", service.getAllRoles());
         model.addAttribute("currentUser", HeaderUtils.getUserName(authentication));
         model.addAttribute("currentRoles",HeaderUtils.getRoles(authentication));
         return "saveUser";
