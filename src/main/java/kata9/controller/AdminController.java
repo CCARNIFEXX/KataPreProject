@@ -1,13 +1,12 @@
 package kata9.controller;
 
-import kata9.entity.Role;
 import kata9.entity.User;
 import kata9.service.UserService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -29,7 +27,7 @@ public class AdminController {
     }
 
     @GetMapping
-    public String getAdminPage(ModelMap model, Authentication authentication) {
+    public String getAdminPage(ModelMap model, @AuthenticationPrincipal User user, Authentication authentication) {
         model.addAttribute("allUsers", service.getAllUsers());
         model.addAttribute("allRoles", service.getAllRoles());
         model.addAttribute("currentUser", HeaderUtils.getUserName(authentication));
@@ -39,23 +37,12 @@ public class AdminController {
 
 
     @GetMapping(value = "/users/save")
-    public String addUserPage(Model model,Authentication authentication) {
+    public String addUserPage(Model model,@AuthenticationPrincipal User user,Authentication authentication) {
         model.addAttribute("user", new User());
         model.addAttribute("allRoles", service.getAllRoles());
         model.addAttribute("currentUser", HeaderUtils.getUserName(authentication));
         model.addAttribute("currentRoles",HeaderUtils.getRoles(authentication));
         return "saveUser";
-    }
-
-    @GetMapping(value = "/users/change/{id}")
-    public String editUserPage(ModelMap model,Authentication authentication, @PathVariable("id") long id) {
-        User user = service.getUserById(id);
-        model.addAttribute("user", user);
-        model.addAttribute("userRoles", user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
-        model.addAttribute("roles", service.getAllRoleNames());
-        model.addAttribute("currentUser", HeaderUtils.getUserName(authentication));
-        model.addAttribute("currentRoles",HeaderUtils.getRoles(authentication));
-        return "changeUser";
     }
 
     @PostMapping(value = "/users/save")

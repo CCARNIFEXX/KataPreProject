@@ -1,49 +1,78 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<!doctype html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-          rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <meta charset="UTF-8">
-    <title>Все пользователи</title>
-    <style>
-        form, button {
-            display: contents;
-        }
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        th, td, table {
-            border-collapse: collapse;
-            border: 1px solid black
-        }
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-        th, td {
-            padding: 5px;
-            width: 30%
-        }
-    </style>
-
+    <title>User page</title>
 </head>
 <body>
 <header th:replace="~{block/header.html  :: header}"></header>
-<div class="container">
+<section>
+    <div class="container-fluid h-100">
+        <div class="row h-100">
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col" style=" width: 25%;">Имя</th>
-            <th scope="col">Почта</th>
-            <th scope="col">Возраст</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td th:text="${user.getUsername()}"/>
-            <td th:text="${user.getEmail()}"/>
-            <td th:text="${user.getAge()}"/>
-        </tr>
-        </tbody>
-    </table>
-</div>
+            <div class="p-0 col-2">
+                <div class="nav flex-column nav-pills pt-4" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <a class="nav-link" href="/admin" sec:authorize="hasAuthority('ROLE_ADMIN')" role="tab"
+                       aria-controls="v-pills-home" aria-selected="true">Admin</a>
+                    <a class="nav-link active" href="/user" sec:authorize="(hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER'))"
+                       role="tab"
+                       aria-controls="v-pills-profile" aria-selected="false">User</a>
+                </div>
+            </div>
+
+            <div class="p-0 col-10 bg-light">
+                <div class="tabs p-4">
+                    <h1>User information page</h1>
+                    <div class="pt-2 tab-content">
+                        <div class="tab-pane fade show active" id="description">
+                            <div class="p-3 border">
+                                <h5 class="my-0 mx-2">User info</h5>
+                            </div>
+                            <div class="p-3 bg-white border border-top-0">
+                                <table class="usersTable table table-striped bg-white">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Username</th>
+                                        <th>Age</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td th:text="${user.id}"></td>
+                                        <td th:text="${user.username}"></td>
+                                        <td th:text="${user.age}"></td>
+                                        <td th:text="${user.email}"></td>
+                                        <td>
+                                            <th:block th:each="role: ${user.roles}"
+                                                      th:text="${role.name} + ' '">
+                                            </th:block>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
 </body>
 </html>

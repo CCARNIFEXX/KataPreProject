@@ -1,8 +1,10 @@
 package kata9.controller;
 
+import kata9.entity.User;
 import kata9.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,9 +21,8 @@ public class UsersController {
     }
 
     @GetMapping
-    public String getUserPage(ModelMap model, Authentication authentication) {
-        String authenticationName = authentication.getName();
-        model.addAttribute("user", service.getUserByName(authenticationName));
+    public String getUserPage(ModelMap model, @AuthenticationPrincipal User user, Authentication authentication) {
+        model.addAttribute("user", user);
         model.addAttribute("currentUser", HeaderUtils.getUserName(authentication));
         model.addAttribute("currentRoles",HeaderUtils.getRoles(authentication));
         return "user";
