@@ -22,6 +22,8 @@ public class UsersController {
     public String getUserPage(ModelMap model, Authentication authentication) {
         String authenticationName = authentication.getName();
         model.addAttribute("user", service.getUserByName(authenticationName));
+        model.addAttribute("currentUser", HeaderUtils.getUserName(authentication));
+        model.addAttribute("currentRoles",HeaderUtils.getRoles(authentication));
         return "user";
     }
 
