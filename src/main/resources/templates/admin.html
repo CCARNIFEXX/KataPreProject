@@ -78,14 +78,14 @@
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                                 aria-label="Close"></button>
                                                     </div>
-                                                    <form th:action="@{/admin/users/change/{id}(id=${user.id})}"
-                                                          th:object="${user}" th:method="POST">
+                                                    <form th:action="@{/admin/users/change}"
+                                                          th:object="${user}" th:method="PATCH">
                                                         <input type="hidden" name="id" th:value="${user.id}">
                                                         <div class="modal-body col-md text-center">
                                                             <br>
-                                                            <label for="name0"><b>Name</b></label>
-                                                            <input th:name="name" th:type="text"
-                                                                   class="form-control" id="name0"
+                                                            <label for="username"><b>Username</b></label>
+                                                            <input th:name="username" th:type="text"
+                                                                   class="form-control" id="username"
                                                                    th:value="${user.username}"/>
                                                             <br>
                                                             <label for="age0"><b>Age</b></label>
