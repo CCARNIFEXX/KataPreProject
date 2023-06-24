@@ -1,5 +1,6 @@
 package kata9.controller;
 
+import kata9.entity.Role;
 import kata9.entity.User;
 import kata9.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
@@ -44,31 +46,44 @@ public class AdminController {
         model.addAttribute("currentRoles",HeaderUtils.getRoles(authentication));
         return "saveUser";
     }
+    @GetMapping(value = "/users")
+    @ResponseBody
+    public ResponseEntity<List<User>> userList(){
+        return ResponseEntity.ok(service.getAllUsers());
+    }
+    @GetMapping(value = "/roles")
+    @ResponseBody
+    public ResponseEntity<List<Role>> userRoles(){
+        return ResponseEntity.ok(service.getAllRoles());
+    }
 
     @PostMapping(value = "/users/save")
-    public String add(@ModelAttribute("user") @Valid CreateUserDTO userDTO) {
+    @ResponseBody
+    public void add(@ModelAttribute("user") @Valid CreateUserDTO userDTO) {
         service.saveUser(userDTO);
-        return "redirect:/admin";
     }
 
 
     @PatchMapping(value = "/users/change")
-    public String edit(@ModelAttribute("user") @Valid ChangeUserDTO userDTO) {
+    @ResponseBody
+    public void edit(@ModelAttribute("user") @Valid ChangeUserDTO userDTO) {
         service.changeUser(userDTO);
-        return "redirect:/admin";
+
     }
+
+    @DeleteMapping("/users/{id}")
+    @ResponseBody
+    public void delete(@PathVariable("id") long id) {
+        service.removeUserById(id);
+
+    }
+
 
     @ExceptionHandler
     private ResponseEntity<String> Handler(SQLIntegrityConstraintViolationException violationException) {
         return new ResponseEntity<>("""
                 {"message": "%s"}
                 """.formatted(violationException.getMessage()), HttpStatusCode.valueOf(400));
-    }
-
-    @DeleteMapping("/users/{id}")
-    public String delete(@PathVariable("id") long id) {
-        service.removeUserById(id);
-        return "redirect:/admin";
     }
 
 }
