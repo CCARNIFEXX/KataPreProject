@@ -11,11 +11,11 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class PageController {
+public class ViewController {
     private final UserService service;
 
     @Autowired
-    public PageController(UserService service) {
+    public ViewController(UserService service) {
         this.service = service;
     }
     @GetMapping(value = "/admin")
@@ -41,5 +41,4 @@ public class PageController {
         model.addAttribute("currentRoles",HeaderUtils.getRoles(authentication));
         return "user";
     }
-
 }
